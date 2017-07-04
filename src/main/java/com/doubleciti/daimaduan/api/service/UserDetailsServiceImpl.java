@@ -1,8 +1,6 @@
 package com.doubleciti.daimaduan.api.service;
 
 import com.doubleciti.daimaduan.api.domain.User;
-import com.doubleciti.daimaduan.api.model.UserLoginModel;
-import com.doubleciti.daimaduan.api.model.UserRegisterModel;
 import com.doubleciti.daimaduan.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,31 +8,29 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> save(UserRegisterModel model) {
-        User user = new User(model.getUsername(), model.getEmail(), new BCryptPasswordEncoder().encode(model.getPassword()));
-
-        userRepository.save(user);
-
-        return Optional.of(user);
-    }
-
-    public Optional<User> findUser(UserLoginModel model) {
-        return Optional.of(userRepository.findOneByEmail(model.getEmail()));
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findOneByEmail(username);
+        if (user == null) {
+            return null;
+        }
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }

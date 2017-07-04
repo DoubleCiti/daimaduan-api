@@ -1,14 +1,19 @@
 package com.doubleciti.daimaduan.api.domain;
 
 import com.doubleciti.daimaduan.api.model.UserInfoModel;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 public class User {
     @Id
     private String id;
 
+    @Indexed(unique=true)
     private String username;
 
+    @Email
+    @Indexed(unique=true)
     private String email;
 
     private String password;

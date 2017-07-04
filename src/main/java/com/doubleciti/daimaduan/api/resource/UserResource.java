@@ -1,7 +1,6 @@
 package com.doubleciti.daimaduan.api.resource;
 
 import com.doubleciti.daimaduan.api.domain.User;
-import com.doubleciti.daimaduan.api.model.UserInfoModel;
 import com.doubleciti.daimaduan.api.model.UserLoginModel;
 import com.doubleciti.daimaduan.api.model.UserRegisterModel;
 import com.doubleciti.daimaduan.api.service.SecurityService;
@@ -17,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 @Path("/user")
 @Component
@@ -40,14 +40,13 @@ public class UserResource {
             return Response.serverError().build();
         }
 
-        User user = userService.authenticateUser(model);
-        if (user == null) {
-            return Response.serverError().build();
+        Optional<User> userOptional = userService.findUser(model);
+        if (userOptional.isPresent()) {
+            securityService.login(userOptional.get());
+            return Response.ok(userOptional.get().toUserInfo()).build();
         }
 
-        securityService.login(user);
-
-        return Response.ok(user).build();
+        return Response.serverError().build();
     }
 
     @POST
@@ -59,8 +58,15 @@ public class UserResource {
             return Response.serverError().build();
         }
 
-        UserInfoModel user = userService.save(model).toUserInfo();
+        Optional<User> userOptional = userService.save(model);
 
-        return Response.created(new URI(String.format("/users/%s", user.getId()))).entity(user).build();
+        if (userOptional.isPresent()) {
+            return Response
+                    .created(new URI(String.format("/users/%s", userOptional.get().getId())))
+                    .entity(userOptional.get())
+                    .build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

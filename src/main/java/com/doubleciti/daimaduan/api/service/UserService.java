@@ -4,8 +4,10 @@ import com.doubleciti.daimaduan.api.domain.User;
 import com.doubleciti.daimaduan.api.model.UserLoginModel;
 import com.doubleciti.daimaduan.api.model.UserRegisterModel;
 
-public interface UserService {
-    User save(UserRegisterModel model);
+import java.util.Optional;
 
-    User authenticateUser(UserLoginModel model);
+public interface UserService {
+    Optional<User> save(UserRegisterModel model);
+
+    Optional<User> findUser(UserLoginModel model);
 }

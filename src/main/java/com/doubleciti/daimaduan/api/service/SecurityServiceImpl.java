@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -17,17 +18,23 @@ import java.util.Set;
 public class SecurityServiceImpl implements SecurityService {
     private final AuthenticationManager authManager;
 
+    private final UserDetailsService userDetailsService;
+
     @Autowired
-    public SecurityServiceImpl(AuthenticationManager manager) {
+    public SecurityServiceImpl(AuthenticationManager manager,
+                               UserDetailsService userDetailsService) {
         this.authManager = manager;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public void login(User user) {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, user.getPassword(), userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                userDetails, user.getPassword(), userDetails.getAuthorities());
 
         authManager.authenticate(token);
 
