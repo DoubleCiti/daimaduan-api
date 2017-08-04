@@ -1,7 +1,10 @@
 package com.doubleciti.daimaduan.api.domain;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Collection;
 
+@Document
 public class Paste {
     private String title;
 
