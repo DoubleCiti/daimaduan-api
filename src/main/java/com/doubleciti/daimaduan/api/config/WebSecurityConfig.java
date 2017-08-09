@@ -18,14 +18,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final RESTAuthenticationEntryPoint authenticationEntryPoint;
+    private final RESTAuthenticationFailureHandler authenticationFailureHandler;
+    private final RESTAuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private RESTAuthenticationEntryPoint authenticationEntryPoint;
-    @Autowired
-    private RESTAuthenticationFailureHandler authenticationFailureHandler;
-    @Autowired
-    private RESTAuthenticationSuccessHandler authenticationSuccessHandler;
+    public WebSecurityConfig(RESTAuthenticationEntryPoint authenticationEntryPoint,
+                             RESTAuthenticationFailureHandler authenticationFailureHandler,
+                             RESTAuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

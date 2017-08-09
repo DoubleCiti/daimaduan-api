@@ -7,6 +7,8 @@ public class UserInfoModel {
 
     private String email;
 
+    public UserInfoModel() {}
+
     public UserInfoModel(String id, String username, String email) {
         this.id = id;
         this.username = username;
