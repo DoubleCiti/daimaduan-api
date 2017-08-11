@@ -1,4 +1,4 @@
-package com.doubleciti.daimaduan.api.handler;
+package com.doubleciti.daimaduan.api.resource;
 
 import com.doubleciti.daimaduan.api.model.UserInfoModel;
 import com.doubleciti.daimaduan.api.model.UserLoginModel;
@@ -36,6 +36,7 @@ public class UserTests {
 
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody().getEmail()).isEqualTo("user1@test.com");
+		assertThat(entity.getBody().getId()).isGreaterThanOrEqualTo(1000);
 	}
 
 	@Test

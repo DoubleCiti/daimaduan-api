@@ -1,9 +1,12 @@
-package com.doubleciti.daimaduan.api.domain;
+package com.doubleciti.daimaduan.api.model;
 
-public class Code {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CodeModel {
     private String title;
 
-//    private Syntax syntax;
+//    private String syntax;
 
     private String content;
 
@@ -15,11 +18,11 @@ public class Code {
         this.title = title;
     }
 
-//    public Syntax getSyntax() {
+//    public String getSyntax() {
 //        return syntax;
 //    }
 
-//    public void setSyntax(Syntax syntax) {
+//    public void setSyntax(String syntax) {
 //        this.syntax = syntax;
 //    }
 

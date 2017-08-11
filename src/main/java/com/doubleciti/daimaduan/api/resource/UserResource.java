@@ -43,13 +43,11 @@ public class UserResource {
             return Response.serverError().build();
         }
 
-        Optional<User> userOptional = userService.findUser(model);
-        if (userOptional.isPresent()) {
-            securityService.login(userOptional.get());
-            return Response.ok(userOptional.get().toUserInfo()).build();
-        }
-
-        return Response.serverError().build();
+        return userService.findUser(model)
+                .map(user -> {
+                    securityService.login(user);
+                    return Response.ok(user.toUserInfo()).build(); })
+                .orElseGet(() -> Response.status(Status.UNAUTHORIZED).build());
     }
 
     @POST
@@ -68,13 +66,17 @@ public class UserResource {
             throw new RegistrationException(Status.BAD_REQUEST, "username/email duplicate");
         }
 
-        if (userOptional.isPresent()) {
-            return Response
-                    .created(new URI(String.format("/users/%s", userOptional.get().getId())))
-                    .entity(userOptional.get().toUserInfo())
-                    .build();
-        }
-
-        return Response.status(Status.NOT_FOUND).build();
+        return userOptional
+                .flatMap(user -> {
+                    try {
+                        return Optional.ofNullable(Response
+                                .created(new URI(String.format("/users/%s", userOptional.get().getId())))
+                                .entity(userOptional.get().toUserInfo())
+                                .build());
+                    } catch (URISyntaxException e) {
+                        return Optional.empty();
+                    }
+                })
+                .orElseGet(() -> Response.serverError().build());
     }
 }

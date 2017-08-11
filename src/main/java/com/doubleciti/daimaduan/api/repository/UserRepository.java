@@ -7,4 +7,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     User findOneByEmail(String email);
 
     User findOneByUsername(String username);
+
+    User findFirstByOrderByCreatedAtDesc();
 }

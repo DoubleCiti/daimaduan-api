@@ -7,10 +7,10 @@ import com.doubleciti.daimaduan.api.model.UserRegisterModel;
 import com.doubleciti.daimaduan.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @Service
@@ -23,14 +23,38 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> save(UserRegisterModel model) throws RegistrationException {
-        User user = new User(model.getUsername(), model.getEmail(), new BCryptPasswordEncoder().encode(model.getPassword()));
+        User user = new User(model.getUsername(),
+                model.getEmail(),
+                new BCryptPasswordEncoder().encode(model.getPassword()));
+        user.setSeqId(getNextSequence());
 
-        userRepository.save(user);
+        while (true) {
+            try {
+                userRepository.save(user);
+
+                break;
+            } catch (DuplicateKeyException e) {
+                user.setSeqId(getNextSequence());
+            }
+        }
 
         return Optional.of(user);
     }
 
+    private Integer getNextSequence() {
+        User user = userRepository.findFirstByOrderByCreatedAtDesc();
+        if (user == null) {
+            return 1000; // starts with 1000
+        }
+        return user.getSeqId() + 1;
+    }
+
     public Optional<User> findUser(UserLoginModel model) {
         return Optional.of(userRepository.findOneByEmail(model.getEmail()));
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return userRepository.findOneByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

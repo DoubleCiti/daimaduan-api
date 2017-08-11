@@ -11,4 +11,6 @@ public interface UserService {
     Optional<User> save(UserRegisterModel model) throws RegistrationException;
 
     Optional<User> findUser(UserLoginModel model);
+
+    User getCurrentUser();
 }

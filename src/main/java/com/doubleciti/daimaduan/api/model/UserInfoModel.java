@@ -1,7 +1,7 @@
 package com.doubleciti.daimaduan.api.model;
 
 public class UserInfoModel {
-    private String id;
+    private Integer id;
 
     private String username;
 
@@ -9,17 +9,17 @@ public class UserInfoModel {
 
     public UserInfoModel() {}
 
-    public UserInfoModel(String id, String username, String email) {
+    public UserInfoModel(Integer id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
