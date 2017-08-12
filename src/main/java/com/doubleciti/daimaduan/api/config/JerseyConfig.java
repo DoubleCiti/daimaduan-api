@@ -4,6 +4,7 @@ import com.doubleciti.daimaduan.api.exception.ApiExceptionMapper;
 import com.doubleciti.daimaduan.api.resource.PasteResource;
 import com.doubleciti.daimaduan.api.resource.UserResource;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

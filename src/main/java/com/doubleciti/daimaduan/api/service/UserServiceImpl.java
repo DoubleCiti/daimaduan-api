@@ -34,7 +34,12 @@ public class UserServiceImpl implements UserService {
 
                 break;
             } catch (DuplicateKeyException e) {
-                user.setSeqId(getNextSequence());
+                // well, the way of finding out which key is duplicated is silly
+                if (e.getMessage().indexOf("seqId") > 0 && e.getMessage().indexOf(user.getSeqId()) > 0) {
+                    user.setSeqId(getNextSequence());
+                } else {
+                    throw e;
+                }
             }
         }
 

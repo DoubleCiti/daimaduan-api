@@ -10,6 +10,13 @@ public class CodeModel {
 
     private String content;
 
+    public CodeModel(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public CodeModel() {}
+
     public String getTitle() {
         return title;
     }
