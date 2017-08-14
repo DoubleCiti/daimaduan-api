@@ -1,6 +1,5 @@
 package com.doubleciti.daimaduan.api.resource;
 
-import com.doubleciti.daimaduan.api.domain.Paste;
 import com.doubleciti.daimaduan.api.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
