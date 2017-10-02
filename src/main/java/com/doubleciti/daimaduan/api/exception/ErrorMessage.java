@@ -1,5 +1,7 @@
 package com.doubleciti.daimaduan.api.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class ErrorMessage {
     private int status;
 
@@ -8,7 +10,7 @@ public class ErrorMessage {
     private String errorMessage;
 
     public ErrorMessage(ApiException exception) {
-        this.status = exception.getStatus().getStatusCode();
+        this.status = HttpStatus.OK.value();
         this.errorCode = exception.getCode();
         this.errorMessage = exception.getMessage();
     }

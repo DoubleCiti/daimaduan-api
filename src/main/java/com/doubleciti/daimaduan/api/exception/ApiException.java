@@ -1,21 +1,21 @@
 package com.doubleciti.daimaduan.api.exception;
 
-import javax.ws.rs.core.Response.Status;
+import org.springframework.http.HttpStatus;
 
 public class ApiException extends Exception {
-    private Status status;
+    private HttpStatus status;
 
     private int code;
 
     private String message;
 
-    public ApiException(Status status, int code, String message) {
+    public ApiException(HttpStatus status, int code, String message) {
         this.status = status;
         this.code = code;
         this.message = message;
     }
 
-    public Status getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
 
